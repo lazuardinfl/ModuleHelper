@@ -18,7 +18,7 @@ function Initialize-PrivateGallery {
             }
         }
         else {
-            Register-PSResourceRepository -Name $name -Uri $url -Priority 100 -Trusted -ErrorAction Stop
+            Register-PSResourceRepository -Name $name -Uri $url -Priority 10 -Trusted -ErrorAction Stop
         }
     }
     catch { if ($silent) { return $null } else { throw } }
