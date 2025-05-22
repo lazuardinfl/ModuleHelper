@@ -27,14 +27,8 @@ function Initialize-PrivateGallery {
         if (!$name) { throw "Environment variable PrivatePSGallery not found" }
         if (!$url) { throw "Invalid url" }
         $repo = Get-PSResourceRepository -Name $name -ErrorAction SilentlyContinue
-        if ($repo) {
-            if ($repo.Uri.ToString().TrimEnd('/') -ne $url.TrimEnd('/')) {
-                Set-PSResourceRepository -Name $name -Uri $url -ErrorAction Stop
-            }
-        }
-        else {
-            Register-PSResourceRepository -Name $name -Uri $url -Priority 10 -Trusted -ErrorAction Stop
-        }
+        if (!$repo) { Register-PSResourceRepository -Name $name -Uri $url -Priority 10 -Trusted -ErrorAction Stop }
+        elseif ($repo.Uri.ToString().TrimEnd("/") -ne $url.TrimEnd("/")) { Set-PSResourceRepository -Name $name -Uri $url -ErrorAction Stop }
     }
     catch { if ($silent) { return $null } else { throw } }
 }
