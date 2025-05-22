@@ -1,5 +1,20 @@
 using namespace System
 
+function Set-EnvironmentFromFile {
+    param (
+        [Alias("FilePath")] [string]$file = ".env"
+    )
+    $lines = Get-Content -Path $file -ErrorAction SilentlyContinue
+    foreach ($line in $lines) {
+        $item = $line.Split("=", 2)
+        if ($item.Count -eq 2) {
+            $key = $item[0].Trim()
+            $value = $item[1].Trim()
+            if (!$key.StartsWith("#")) { try { [Environment]::SetEnvironmentVariable($key, $value) } catch {} }
+        }
+    }
+}
+
 function Initialize-PrivateGallery {
     param (
         [Alias("GalleryName")] [string]$name,
